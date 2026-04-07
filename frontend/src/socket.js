@@ -1,20 +1,31 @@
 import { io } from 'socket.io-client';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+const isProduction = import.meta.env.PROD;
+
+const BACKEND_URL =
+  import.meta.env.VITE_BACKEND_URL ||
+  (isProduction
+    ? 'https://whopushedthat.onrender.com'
+    : 'http://localhost:3001');
 
 const socket = io(BACKEND_URL, {
   autoConnect: true,
   reconnection: true,
-  reconnectionAttempts: 5,
+  reconnectionAttempts: Infinity,
   reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,
+  timeout: 20000,
+  transports: ['websocket', 'polling'],
+  secure: true
 });
 
 socket.on('connect', () => {
-  console.log('[Socket] Connected:', socket.id);
+  console.log(`[Socket] Connected to ${isProduction ? 'production' : 'local'} server:`, BACKEND_URL);
+  console.log('[Socket] ID:', socket.id);
 });
 
-socket.on('disconnect', () => {
-  console.log('[Socket] Disconnected');
+socket.on('disconnect', (reason) => {
+  console.log('[Socket] Disconnected. Reason:', reason);
 });
 
 socket.on('connect_error', (err) => {

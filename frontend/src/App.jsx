@@ -28,7 +28,7 @@ export default function App() {
   const [wrongAnswers, setWrongAnswers] = useState(0);
   const [messages, setMessages] = useState([]);
   const [votes, setVotes] = useState({});
-  const [connectionStatus, setConnectionStatus] = useState('connected');
+  const [connectionStatus, setConnectionStatus] = useState('connecting');
   const [nextRound, setNextRound] = useState(false);
   // Consensus answer state
   const [answerVotes, setAnswerVotes] = useState({}); // { ANSWER: count }
@@ -192,10 +192,34 @@ export default function App() {
 
   return (
     <>
+      {connectionStatus === 'connecting' && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999,
+          background: 'rgba(0,212,255,0.9)', color: '#fff',
+          textAlign: 'center', padding: '8px',
+          fontFamily: 'var(--font-mono)', fontSize: '0.8rem',
+          letterSpacing: '0.1em',
+        }}>
+          ↯ INITIALIZING CONNECTION TO SERVER...
+        </div>
+      )}
+
+      {connectionStatus === 'error' && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999,
+          background: 'rgba(255,204,0,0.95)', color: '#000',
+          textAlign: 'center', padding: '8px',
+          fontFamily: 'var(--font-mono)', fontSize: '0.8rem',
+          letterSpacing: '0.1em',
+        }}>
+          ⚠ CONNECTION ERROR — Retrying...
+        </div>
+      )}
+
       {connectionStatus === 'disconnected' && (
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999,
-          background: 'rgba(255,56,100,0.9)', color: '#fff',
+          background: 'rgba(255,56,100,0.95)', color: '#fff',
           textAlign: 'center', padding: '8px',
           fontFamily: 'var(--font-mono)', fontSize: '0.8rem',
           letterSpacing: '0.1em',
