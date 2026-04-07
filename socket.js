@@ -1,7 +1,12 @@
 import { io } from 'socket.io-client';
 
 const isProduction = import.meta.env.PROD;
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || (isProduction ? 'https://whopushedthat.onrender.com' : 'http://localhost:3001');
+
+const BACKEND_URL =
+  import.meta.env.VITE_BACKEND_URL ||
+  (isProduction
+    ? 'https://whopushedthat.onrender.com'
+    : 'http://localhost:3001');
 
 const socket = io(BACKEND_URL, {
   autoConnect: true,
@@ -9,7 +14,9 @@ const socket = io(BACKEND_URL, {
   reconnectionAttempts: Infinity,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
-  transports: ['websocket', 'polling']
+  timeout: 20000,
+  transports: ['websocket', 'polling'],
+  secure: true
 });
 
 socket.on('connect', () => {
