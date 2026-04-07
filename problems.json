@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "title": "Caesar's Secret Order",
+    "briefing": "An ancient Roman general has sent an encrypted message to his troops. Each fragment contains part of the cipher key and encoded text. Combine your knowledge to decrypt the final message.",
+    "fragments": [
+      "FRAGMENT A: The cipher uses ROT-13 encoding. Your encoded snippet: URYYB",
+      "FRAGMENT B: The message has 5 letters total. Encoded snippet to decode: JbeyQ",
+      "FRAGMENT C: Remember: ROT-13 wraps after Z. Your encoded snippet: GehFg",
+      "FRAGMENT D: The decoded message is a single greeting word. Snippet: Uryyb",
+      "FRAGMENT E: All letters shift by exactly 13 positions. Snippet: JBEYQ"
+    ],
+    "imposter_fragment": "FRAGMENT X: The cipher uses ROT-7 encoding (not ROT-13). Your encoded snippet: URYYB — decode using shift 7.",
+    "answer": "HELLO"
+  },
+  {
+    "id": 2,
+    "title": "Binary Transmission",
+    "briefing": "A distress signal has been intercepted. It appears to be ASCII encoded in binary. Decode the binary sequence to reveal the secret keyword.",
+    "fragments": [
+      "FRAGMENT A: Convert binary to ASCII. First byte: 01000001 = 'A'",
+      "FRAGMENT B: Second byte in sequence: 01000011 = 'C'",
+      "FRAGMENT C: Third byte: 01000101 = 'E'",
+      "FRAGMENT D: The word spells out a playing card rank. Fourth byte: 01010011 = 'S'",
+      "FRAGMENT E: Full sequence: 01000001 01000011 01000101 01010011 — read as uppercase word"
+    ],
+    "imposter_fragment": "FRAGMENT X: The sequence uses EBCDIC encoding, not ASCII. First byte translates to 'Z'. Full word starts with Z.",
+    "answer": "ACES"
+  },
+  {
+    "id": 3,
+    "title": "The Vigenère Vault",
+    "briefing": "A spy left an encrypted note using a Vigenère cipher. The key is hidden across your fragments. Work together to decrypt the ciphertext: RIJVS",
+    "fragments": [
+      "FRAGMENT A: Vigenère cipher key is a 5-letter word: starts with 'L'",
+      "FRAGMENT B: Key continues: second letter is 'I'",
+      "FRAGMENT C: Key third letter: 'G'",
+      "FRAGMENT D: Key fourth letter: 'H'",
+      "FRAGMENT E: Key fifth letter is 'T'. Full key: L-I-G-H-T. Ciphertext: RIJVS"
+    ],
+    "imposter_fragment": "FRAGMENT X: Vigenère cipher key is DARK (4 letters, repeating). Ciphertext: RIJVS. Use key DARKD to decrypt.",
+    "answer": "GHOST"
+  },
+  {
+    "id": 4,
+    "title": "Hex Whispers",
+    "briefing": "A hacker left a message encoded in hexadecimal. Decode the hex string to find the secret word. The hex values represent ASCII characters.",
+    "fragments": [
+      "FRAGMENT A: Hex encoding maps to ASCII. First hex value: 0x43 = 'C'",
+      "FRAGMENT B: Second hex value: 0x4F = 'O'",
+      "FRAGMENT C: Third hex value: 0x44 = 'D'",
+      "FRAGMENT D: Fourth hex value: 0x45 = 'E'",
+      "FRAGMENT E: Full hex string: 43 4F 44 45 — decode each byte to ASCII"
+    ],
+    "imposter_fragment": "FRAGMENT X: The hex values use Base-12 encoding instead of Base-16. Reinterpret: 0x43 in base-12 = 'F'. Full word starts with F.",
+    "answer": "CODE"
+  },
+  {
+    "id": 5,
+    "title": "Morse Transmission",
+    "briefing": "A vintage radio transmission has been captured in Morse code. Decode the dots and dashes to reveal the distress keyword.",
+    "fragments": [
+      "FRAGMENT A: Morse code message. First character: .-- = 'W'",
+      "FRAGMENT B: Second character: .- = 'A'",
+      "FRAGMENT C: Third character: .-. = 'R'",
+      "FRAGMENT D: Fourth character: -. = 'N'",
+      "FRAGMENT E: Full Morse: .-- .- .-. -. — it means to alert others of danger"
+    ],
+    "imposter_fragment": "FRAGMENT X: Transmission uses inverted Morse (dots become dashes and vice versa). Inverted .-- is --. = 'G'. Full word starts with G.",
+    "answer": "WARN"
+  }
+]
