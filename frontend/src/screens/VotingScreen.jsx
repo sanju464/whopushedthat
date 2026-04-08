@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-export default function VotingScreen({ username, room, socket, myRole, voteResult, votes, wrongAnswers }) {
+export default function VotingScreen({ username, room, socket, myRole, voteResult, votes, wrongAnswers, messages = [] }) {
   const [selectedTarget, setSelectedTarget] = useState(null);
   const [hasVoted, setHasVoted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30);
+  const [chatInput, setChatInput] = useState('');
+  const chatEndRef = useRef(null);
   const isHost = socket.id === room?.hostId;
 
   const activePlayers = room?.players?.filter(p =>
@@ -54,6 +56,24 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
     socket.emit('cast-vote', { code: room.code, targetId: null });
   };
 
+  const sendMessage = () => {
+    if (!chatInput.trim()) return;
+    socket.emit('send-message', { code: room.code, message: chatInput.trim(), username });
+    setChatInput('');
+  };
+
+  const handleChatKey = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  // Auto-scroll chat
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   const forceResolve = () => {
     socket.emit('resolve-votes', { code: room.code });
   };
@@ -61,7 +81,7 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
   const myVote = votes[socket.id];
 
   return (
-    <div className="screen-center grid-bg" style={{ padding: '24px', alignItems: 'center' }}>
+    <div className="screen-center grid-bg" style={{ padding: '24px', alignItems: 'flex-start' }}>
       {/* Red ambient glow */}
       <div style={{
         position: 'fixed', top: '50%', left: '50%',
@@ -71,7 +91,14 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
         pointerEvents: 'none',
       }} />
 
-      <div style={{ width: '100%', maxWidth: '560px', animation: 'slide-up 0.4s ease' }}>
+      <div style={{
+        width: '100%',
+        maxWidth: '960px',
+        display: 'flex',
+        gap: '20px',
+        alignItems: 'flex-start',
+        animation: 'slide-up 0.4s ease',
+      }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div style={{
@@ -310,7 +337,124 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
             Force Resolve Votes Now
           </button>
         )}
+      </div>{/* end vote column */}
+
+      {/* ── Chat Panel ──────────────────────────────────── */}
+      <div style={{
+        flex: '0 0 300px',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '520px',
+        background: 'var(--surface-dark)',
+        border: '1px solid var(--border-subtle)',
+        borderRadius: 'var(--radius)',
+        overflow: 'hidden',
+      }}>
+        {/* Chat header */}
+        <div style={{
+          padding: '12px 16px',
+          borderBottom: '1px solid var(--border-subtle)',
+          fontFamily: 'var(--font-mono)',
+          fontSize: '0.65rem',
+          color: 'var(--text-secondary)',
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase',
+          flexShrink: 0,
+        }}>
+          Discussion
+        </div>
+
+        {/* Messages */}
+        <div style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '12px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+        }}>
+          {messages.length === 0 && (
+            <div style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.7rem',
+              color: 'var(--text-muted)',
+              textAlign: 'center',
+              marginTop: '12px',
+              opacity: 0.7,
+            }}>
+              Discuss before you vote...
+            </div>
+          )}
+          {messages.map((msg) => {
+            const isMine = msg.username === username;
+            return (
+              <div key={msg.id} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: isMine ? 'flex-end' : 'flex-start',
+              }}>
+                {!isMine && (
+                  <span style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '0.6rem',
+                    color: 'var(--text-muted)',
+                    marginBottom: '2px',
+                  }}>{msg.username}</span>
+                )}
+                <div style={{
+                  maxWidth: '85%',
+                  padding: '6px 10px',
+                  borderRadius: '8px',
+                  background: isMine
+                    ? 'rgba(255,56,100,0.15)'
+                    : 'rgba(255,255,255,0.05)',
+                  border: isMine
+                    ? '1px solid rgba(255,56,100,0.25)'
+                    : '1px solid var(--border-subtle)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.78rem',
+                  color: 'var(--text-primary)',
+                  wordBreak: 'break-word',
+                  lineHeight: 1.4,
+                }}>
+                  {msg.message}
+                </div>
+              </div>
+            );
+          })}
+          <div ref={chatEndRef} />
+        </div>
+
+        {/* Input */}
+        <div style={{
+          padding: '10px',
+          borderTop: '1px solid var(--border-subtle)',
+          display: 'flex',
+          gap: '8px',
+          flexShrink: 0,
+        }}>
+          <input
+            id="voting-chat-input"
+            className="input"
+            style={{ flex: 1, fontSize: '0.8rem', padding: '8px 12px' }}
+            placeholder="Say something..."
+            value={chatInput}
+            onChange={e => setChatInput(e.target.value)}
+            onKeyDown={handleChatKey}
+            maxLength={300}
+          />
+          <button
+            id="voting-chat-send"
+            className="btn btn-primary btn-sm"
+            onClick={sendMessage}
+            disabled={!chatInput.trim()}
+          >
+            Send
+          </button>
+        </div>
       </div>
-    </div>
+
+    </div>{/* end outer flex */}
+    </div>{/* end screen-center */}
   );
 }

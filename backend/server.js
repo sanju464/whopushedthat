@@ -106,7 +106,7 @@ io.on('connection', (socket) => {
   socket.on('send-message', ({ code, message, username }) => {
     if (!message || !message.trim()) return;
     const room = gm.getRoom(code);
-    if (!room || room.state !== 'game') return;
+    if (!room || (room.state !== 'game' && room.state !== 'voting')) return;
 
     const msg = {
       id: Date.now() + Math.random(),

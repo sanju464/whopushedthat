@@ -272,6 +272,7 @@ export default function App() {
           voteResult={voteResult}
           votes={votes}
           wrongAnswers={wrongAnswers}
+          messages={messages}
         />
       )}
 
