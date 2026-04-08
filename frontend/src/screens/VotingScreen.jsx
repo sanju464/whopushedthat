@@ -99,7 +99,9 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
         alignItems: 'flex-start',
         animation: 'slide-up 0.4s ease',
       }}>
-        {/* Header */}
+        {/* Left Column - Voting */}
+        <div style={{ flex: 1 }}>
+          {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div style={{
             fontFamily: 'var(--font-mono)',
@@ -337,7 +339,7 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
             Force Resolve Votes Now
           </button>
         )}
-      </div>{/* end vote column */}
+      </div>
 
       {/* ── Chat Panel ──────────────────────────────────── */}
       <div style={{
@@ -454,7 +456,7 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
         </div>
       </div>
 
-    </div>{/* end outer flex */}
-    </div>{/* end screen-center */}
+    </div>
+  </div>
   );
 }
