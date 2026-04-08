@@ -33,31 +33,38 @@ export default function App() {
   // Consensus answer state
   const [answerVotes, setAnswerVotes] = useState({}); // { ANSWER: count }
   const [majorityInfo, setMajorityInfo] = useState(null); // { answer, count, total, delay }
+  const [voteEndTime, setVoteEndTime] = useState(null);
 
   // ── Socket listeners ────────────────────────────────────────────────────────
 
   useEffect(() => {
-    socket.on('connect', () => setConnectionStatus('connected'));
+    socket.on('connect', () => {
+      setConnectionStatus('connected');
+      const savedUsername = localStorage.getItem('trust_username');
+      if (savedUsername) setUsername(savedUsername);
+    });
+
     socket.on('disconnect', () => setConnectionStatus('disconnected'));
     socket.on('connect_error', () => setConnectionStatus('error'));
 
-    // Room updated (someone joined)
+    // Room info updates
     socket.on('room-updated', (updatedRoom) => {
       setRoom(updatedRoom);
     });
 
-    // Role assigned privately
+    // Role assignment
     socket.on('role-assigned', ({ role, fragment, problem }) => {
       setMyRole(role);
       setMyFragment(fragment);
       setProblemInfo(problem);
     });
 
-    // Central game state machine
-    socket.on('game-state-changed', ({ state, players, round, winner, nextRound: nr }) => {
-      if (players) {
-        setRoom(prev => prev ? { ...prev, players, round: round || prev.round } : prev);
-      }
+    // Central state machine coordinator
+    socket.on('game-state-changed', (data) => {
+      const { state, players, round, winner, nextRound: nr, voteEndTime: vEndTime } = data;
+      
+      if (players) setRoom(prev => prev ? { ...prev, players } : prev);
+      if (round) setRoom(prev => prev ? { ...prev, round } : prev);
 
       if (state === 'role-reveal') {
         setScreen(SCREENS.roleReveal);
@@ -66,14 +73,17 @@ export default function App() {
         setVoteResult(null);
         setAnswerVotes({});
         setMajorityInfo(null);
+        setVoteEndTime(null);
       } else if (state === 'game') {
         setWrongAnswers(0);
         setAnswerVotes({});
         setMajorityInfo(null);
+        setVoteEndTime(null);
         setScreen(SCREENS.game);
       } else if (state === 'voting') {
         setAnswerVotes({});
         setMajorityInfo(null);
+        if (vEndTime) setVoteEndTime(vEndTime);
         setScreen(SCREENS.voting);
       } else if (state === 'result') {
         setGameOver(winner ? { winner } : null);
@@ -273,6 +283,7 @@ export default function App() {
           votes={votes}
           wrongAnswers={wrongAnswers}
           messages={messages}
+          voteEndTime={voteEndTime}
         />
       )}
 

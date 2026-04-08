@@ -8,7 +8,7 @@ export default function ResultScreen({
   // Determine win/loss from my perspective
   const winner = gameOver?.winner || voteResult?.winner;
   const iWon = (winner === 'civilians' && !isImposter) || (winner === 'imposter' && isImposter);
-  const isNextRound = nextRound && !winner;
+  const isNextRound = (nextRound || voteResult?.noElimination) && !winner;
   const reason = gameOver?.reason;
 
   const handleNextRound = () => {
@@ -243,7 +243,7 @@ export default function ResultScreen({
         }} />
 
         <div style={{ width: '100%', maxWidth: '460px', textAlign: 'center', animation: 'slide-up 0.4s ease' }}>
-          <div style={{ fontSize: '4rem', marginBottom: '16px' }}>💔</div>
+          <div style={{ fontSize: '4rem', marginBottom: '16px' }}>{voteResult.noElimination ? '⏭️' : '💔'}</div>
 
           <div style={{
             fontFamily: 'var(--font-mono)',
@@ -252,7 +252,7 @@ export default function ResultScreen({
             color: 'var(--neon-red)',
             marginBottom: '8px',
           }}>
-            WRONG TARGET
+            {voteResult.noElimination ? 'VOTE SKIPPED' : 'WRONG TARGET'}
           </div>
 
           <h2 style={{
@@ -261,7 +261,7 @@ export default function ResultScreen({
             color: 'var(--text-primary)',
             marginBottom: '16px',
           }}>
-            Civilian Eliminated
+            {voteResult.noElimination ? 'No one was eliminated' : 'Civilian Eliminated'}
           </h2>
 
           {eliminated && (

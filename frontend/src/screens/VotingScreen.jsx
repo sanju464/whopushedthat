@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-export default function VotingScreen({ username, room, socket, myRole, voteResult, votes, wrongAnswers, messages = [] }) {
+export default function VotingScreen({ username, room, socket, myRole, voteResult, votes, wrongAnswers, voteEndTime, messages = [] }) {
   const [selectedTarget, setSelectedTarget] = useState(null);
   const [hasVoted, setHasVoted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30);
@@ -23,24 +23,22 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
   const votedCount = Object.keys(votes).length;
   const skipCount = Object.values(votes).filter(v => v === '__skip__').length;
 
-  // Countdown timer
+  // Countdown timer synced with backend
   useEffect(() => {
-    if (voteResult) return; // Already resolved
+    if (voteResult || !voteEndTime) return; // Already resolved
     const interval = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          // Host auto-resolves
-          if (isHost) {
-            socket.emit('resolve-votes', { code: room.code });
-          }
-          return 0;
+      const remainingCalc = Math.max(0, Math.floor((voteEndTime - Date.now()) / 1000));
+      setTimeLeft(remainingCalc);
+      
+      if (remainingCalc <= 0) {
+        clearInterval(interval);
+        if (isHost && !voteResult) {
+          socket.emit('resolve-votes', { code: room.code });
         }
-        return prev - 1;
-      });
-    }, 1000);
+      }
+    }, 500); // Evaluate twice a second to be more responsive to exact timestamps
     return () => clearInterval(interval);
-  }, [voteResult]);
+  }, [voteResult, voteEndTime, isHost, room?.code, socket]);
 
   const castVote = (targetId) => {
     if (hasVoted) return;

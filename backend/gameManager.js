@@ -173,7 +173,11 @@ function evaluateAnswer(code, answer) {
   room.answerVotes = {};
   room.answerLocked = false;
 
-  if (room.wrongAnswers >= 3) {
+  const activePlayerCount = room.players.filter(p => !room.eliminatedPlayers.includes(p.id)).length;
+  // Use user's requested 3 mistakes or scale based on players if easy
+  const maxMistakes = Math.max(3, Math.floor(activePlayerCount / 2));
+
+  if (room.wrongAnswers >= maxMistakes) {
     room.state = 'result';
     room.winner = 'imposter';
     return { correct: false, winner: 'imposter', wrongAnswers: room.wrongAnswers };
@@ -202,6 +206,17 @@ function castVote(code, voterId, targetId) {
 function resolveVotes(code) {
   const room = rooms[code];
   if (!room) return { error: 'Room not found.' };
+
+  // Fix: Force end voting bug - ensure EVERY active player has a vote ('__skip__' if missing)
+  const activePlayers = room.players.filter(p =>
+    p.isConnected && !room.eliminatedPlayers.includes(p.id)
+  );
+  
+  activePlayers.forEach(p => {
+    if (!room.votes[p.id]) {
+      room.votes[p.id] = '__skip__';
+    }
+  });
 
   const voteCounts = {};
   Object.values(room.votes).forEach(targetId => {
