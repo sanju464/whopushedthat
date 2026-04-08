@@ -1,0 +1,21 @@
+
+> trust-exe-frontend@1.0.0 lint
+> eslint .
+
+
+C:\Users\ASUS\OneDrive\Desktop\ctf project\frontend\src\App.jsx
+  122:71  warning  'dcName' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+C:\Users\ASUS\OneDrive\Desktop\ctf project\frontend\src\screens\Landing.jsx
+  3:8  warning  'styles' is defined but never used  no-unused-vars
+
+C:\Users\ASUS\OneDrive\Desktop\ctf project\frontend\src\screens\RoleReveal.jsx
+  3:38  warning  'username' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  3:48  warning  'room' is defined but never used. Allowed unused args must match /^_/u      no-unused-vars
+
+C:\Users\ASUS\OneDrive\Desktop\ctf project\frontend\src\screens\VotingScreen.jsx
+   3:64  warning  'myRole' is defined but never used. Allowed unused args must match /^_/u                                                                                                                                                                                                              no-unused-vars
+  43:6   warning  React Hook useEffect has missing dependencies: 'isHost', 'room.code', and 'socket'. Either include them or remove the dependency array. If 'setTimeLeft' needs the current value of 'socket', you can also switch to useReducer instead of useState and read 'socket' in the reducer  react-hooks/exhaustive-deps
+
+✖ 6 problems (0 errors, 6 warnings)
+

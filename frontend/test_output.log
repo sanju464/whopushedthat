@@ -1,0 +1,5 @@
+
+> trust-exe-frontend@1.0.0 test
+> playwright test
+
+Terminate batch job (Y/N)? 
