@@ -308,6 +308,6 @@ function sanitizeRoom(room, requestingSocketId) {
 // ─── START SERVER ─────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
-  console.log(`\n🚀 Trust.exe backend running on http://localhost:${PORT}`);
+  console.log(`\n🚀 whopushedthat backend running on http://localhost:${PORT}`);
   console.log(`   Socket.IO ready for connections\n`);
 });

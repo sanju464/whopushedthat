@@ -187,7 +187,9 @@ function evaluateAnswer(code, answer) {
 function castVote(code, voterId, targetId) {
   const room = rooms[code];
   if (!room) return { error: 'Room not found.' };
-  room.votes[voterId] = targetId;
+
+  // targetId === null means the player chose to skip
+  room.votes[voterId] = targetId || '__skip__';
 
   const activePlayers = room.players.filter(p =>
     p.isConnected && !room.eliminatedPlayers.includes(p.id)
@@ -203,7 +205,10 @@ function resolveVotes(code) {
 
   const voteCounts = {};
   Object.values(room.votes).forEach(targetId => {
-    voteCounts[targetId] = (voteCounts[targetId] || 0) + 1;
+    // Skip votes ('__skip__') do not count toward any player
+    if (targetId && targetId !== '__skip__') {
+      voteCounts[targetId] = (voteCounts[targetId] || 0) + 1;
+    }
   });
 
   let maxVotes = 0;

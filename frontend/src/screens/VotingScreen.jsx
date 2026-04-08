@@ -19,6 +19,7 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
 
   const totalVoters = activePlayers.length;
   const votedCount = Object.keys(votes).length;
+  const skipCount = Object.values(votes).filter(v => v === '__skip__').length;
 
   // Countdown timer
   useEffect(() => {
@@ -44,6 +45,13 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
     setSelectedTarget(targetId);
     setHasVoted(true);
     socket.emit('cast-vote', { code: room.code, targetId });
+  };
+
+  const skipVote = () => {
+    if (hasVoted) return;
+    setSelectedTarget('__skip__');
+    setHasVoted(true);
+    socket.emit('cast-vote', { code: room.code, targetId: null });
   };
 
   const forceResolve = () => {
@@ -107,7 +115,7 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
             ⏱ {timeLeft}s remaining
           </div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-            {votedCount}/{totalVoters} voted
+            {votedCount}/{totalVoters} voted{skipCount > 0 ? ` · ${skipCount} skipped` : ''}
           </div>
 
           {/* Wrong answer meter */}
@@ -249,7 +257,44 @@ export default function VotingScreen({ username, room, socket, myRole, voteResul
           </div>
         </div>
 
-        {hasVoted && (
+        {!hasVoted && (
+          <button
+            id="skip-vote-btn"
+            onClick={skipVote}
+            style={{
+              width: '100%',
+              padding: '10px 16px',
+              marginBottom: '12px',
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px dashed var(--border-subtle)',
+              borderRadius: 'var(--radius-sm)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.78rem',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              letterSpacing: '0.05em',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
+              e.currentTarget.style.color = 'var(--text-secondary)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = 'var(--border-subtle)';
+              e.currentTarget.style.color = 'var(--text-muted)';
+            }}
+          >
+            — skip vote —
+          </button>
+        )}
+
+        {hasVoted && selectedTarget === '__skip__' && (
+          <div className="success-msg" style={{ marginBottom: '12px' }}>
+            ↷ Vote skipped. Waiting for others...
+          </div>
+        )}
+
+        {hasVoted && selectedTarget !== '__skip__' && (
           <div className="success-msg" style={{ marginBottom: '12px' }}>
             ✓ Vote cast. Waiting for others...
           </div>

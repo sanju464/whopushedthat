@@ -123,7 +123,7 @@ export default function GameScreen({
               backgroundClip: 'text',
               letterSpacing: '0.03em',
             }}>
-              WhoPushedThat.exe
+              whopushedthat
             </span>
             <span style={{
               fontFamily: 'var(--font-mono)',

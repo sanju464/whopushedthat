@@ -77,7 +77,7 @@ export default function Landing({ onRoomCreated, onRoomJoined }) {
             lineHeight: 1.1,
             marginBottom: '0',
           }}>
-            WhoPushedThat
+            whopushedthat
           </h1>
           <h1 className="title-flicker" style={{
             fontFamily: 'var(--font-title)',
