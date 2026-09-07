@@ -68,5 +68,124 @@
     ],
     "imposter_fragment": "FRAGMENT X: Transmission uses inverted Morse (dots become dashes and vice versa). Inverted .-- is --. = 'G'. Full word starts with G.",
     "answer": "WARN"
+  },
+  {
+    "id": 6,
+    "title": "The Broken Dispatch",
+    "briefing": "A courier's note was shifted by a Caesar cipher. The team must restore the original message before the dispatch loses value.",
+    "fragments": [
+      "FRAGMENT A: This is a Caesar cipher, where each letter shifts by the same amount.",
+      "FRAGMENT B: The key is 7. Use a shift of +7 to decode the message.",
+      "FRAGMENT C: Ciphertext begins with H and ends with H. The message is a familiar 5-letter word.",
+      "FRAGMENT D: Caesar shifts wrap around the alphabet, so Z moves to A.",
+      "FRAGMENT E: Encoded text: HSWOH"
+    ],
+    "imposter_fragment": "FRAGMENT X: This is definitely a Caesar cipher with a shift of 9, not 7. Decoded text should start with Q if you follow that shift.",
+    "answer": "ALPHA",
+    "algorithm": "Caesar Cipher",
+    "key": "7",
+    "hint": "A Caesar cipher shifts every letter in the alphabet by the same fixed amount; for example, A + 7 becomes H."
+  },
+  {
+    "id": 7,
+    "title": "The Substitution Ledger",
+    "briefing": "A ledger entry was encoded with a monoalphabetic substitution cipher. The group must reconstruct the mapping and recover the hidden word.",
+    "fragments": [
+      "FRAGMENT A: The substitution alphabet is QWERTYUIOPASDFGHJKLZXCVBNM, where Q replaces A, W replaces B, E replaces C, and so on.",
+      "FRAGMENT B: B in the plaintext becomes W in the ciphertext.",
+      "FRAGMENT C: R in the plaintext becomes K in the ciphertext.",
+      "FRAGMENT D: A in the plaintext becomes Q in the ciphertext.",
+      "FRAGMENT E: Ciphertext: WKTQR"
+    ],
+    "imposter_fragment": "FRAGMENT X: The keyboard alphabet is mostly right, but B is mapped to X and A is mapped to Z, which would make the message start with ZX and look like a different word.",
+    "answer": "BREAD",
+    "algorithm": "Monoalphabetic Substitution Cipher",
+    "key": "QWERTYUIOPASDFGHJKLZXCVBNM",
+    "hint": "Each plaintext letter is consistently replaced by another letter; there is no shifting pattern or repeating key."
+  },
+  {
+    "id": 8,
+    "title": "The Split Transmission",
+    "briefing": "A transmission was written in a zigzag pattern across rails before being sent. Recover the decoded word before the signal is lost.",
+    "fragments": [
+      "FRAGMENT A: The message was written diagonally across 3 rails before being read row by row.",
+      "FRAGMENT B: The number of rails is 3.",
+      "FRAGMENT C: Ciphertext: SLHEDI",
+      "FRAGMENT D: The answer is a common item used to protect or guard yourself.",
+      "FRAGMENT E: The rail pattern creates a word that describes a defensive barrier."
+    ],
+    "imposter_fragment": "FRAGMENT X: The transmission used 4 rails instead of 3, so the zigzag pattern was wider and the message would decode differently.",
+    "answer": "SHIELD",
+    "algorithm": "Rail Fence Cipher",
+    "key": "3",
+    "hint": "The message is written diagonally across multiple rails and then read row by row."
+  },
+  {
+    "id": 9,
+    "title": "The Classified File",
+    "briefing": "A file was transposed by columns using a key. Reorder the columns, recover the plaintext, and identify the hidden word.",
+    "fragments": [
+      "FRAGMENT A: The key is CODE. The order of columns to read is C, O, D, E.",
+      "FRAGMENT B: One column begins with H and the final read order is based on the key letters.",
+      "FRAGMENT C: The plaintext is a short word meaning to conceal from view.",
+      "FRAGMENT D: Ciphertext: HDEI",
+      "FRAGMENT E: The key letters appear in the order C-O-D-E, so column order is not alphabetical."
+    ],
+    "imposter_fragment": "FRAGMENT X: The key is COLD, not CODE. That would make the message look more like a weather clue.",
+    "answer": "HIDE",
+    "algorithm": "Columnar Transposition Cipher",
+    "key": "CODE",
+    "hint": "The plaintext is written into columns and the columns are reordered according to the key."
+  },
+  {
+    "id": 10,
+    "title": "The Prisoner's Note",
+    "briefing": "A prisoner hid a note inside a Playfair square. The keyword and matrix rules are spread across the fragments, and the team must reconstruct the message together.",
+    "fragments": [
+      "FRAGMENT A: Keyword used to build the matrix: MATRIX.",
+      "FRAGMENT B: The matrix uses the letters A–Z without J; I and J share one square.",
+      "FRAGMENT C: Ciphertext: IGDIMC",
+      "FRAGMENT D: The answer is a warning or alert signal.",
+      "FRAGMENT E: The first pair in the plaintext is AL and the second pair is ER; the letters are arranged in a 5x5 block."
+    ],
+    "imposter_fragment": "FRAGMENT X: The keyword was MATRIC, not MATRIX. Using that slight typo creates a different square and a plausible but wrong message.",
+    "answer": "ALERT",
+    "algorithm": "Playfair Cipher",
+    "key": "MATRIX",
+    "hint": "Use the keyword to build the 5x5 grid, then decrypt pairs by row and column rules without revealing the plaintext directly."
+  },
+  {
+    "id": 11,
+    "title": "The Matrix Signal",
+    "briefing": "An encoded signal was generated with a 2x2 Hill cipher. The matrix values are split across the team, but one false value could mislead the imposter.",
+    "fragments": [
+      "FRAGMENT A: The key matrix is [[3, 2], [5, 7]].",
+      "FRAGMENT B: The plaintext is a 4-letter word and the matrix is applied in pairs.",
+      "FRAGMENT C: Ciphertext: DFAC",
+      "FRAGMENT D: Each letter is mapped to a number from 0 to 25 before matrix multiplication.",
+      "FRAGMENT E: The determinant is 11, which is invertible modulo 26."
+    ],
+    "imposter_fragment": "FRAGMENT X: One value in the key matrix is wrong — the lower-right entry should be 8 instead of 7 — which would create a similar-looking but incorrect plaintext.",
+    "answer": "BACK",
+    "algorithm": "Hill Cipher",
+    "key": "[[3, 2], [5, 7]]",
+    "hint": "Letters can be represented as numbers and decrypted using the inverse matrix modulo 26."
+  },
+  {
+    "id": 12,
+    "title": "The Public Key",
+    "briefing": "A tiny RSA key was used to encrypt a short integer. Reconstruct the private key and recover the hidden value before the imposter leads the team astray.",
+    "fragments": [
+      "FRAGMENT A: p = 11 and q = 13.",
+      "FRAGMENT B: Public exponent e = 7.",
+      "FRAGMENT C: Ciphertext: 81.",
+      "FRAGMENT D: The plaintext is a small integer between 1 and 99.",
+      "FRAGMENT E: Use n = p × q, then compute φ(n) = (p−1)(q−1), then find d such that e × d ≡ 1 mod φ(n)."
+    ],
+    "imposter_fragment": "FRAGMENT X: The public exponent is 5 instead of 7, which makes a plausible but wrong decryption path.",
+    "answer": "42",
+    "algorithm": "RSA",
+    "key": "p=11; q=13; e=7; n=143; φ(n)=120; d=103",
+    "hint": "RSA uses the public key to encrypt and the private key to decrypt via modular arithmetic without revealing the plaintext."
   }
 ]
